@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    
+    <div class="navigation">
+        <nav>
+            <div class="logo">
+                <div class="svg_container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="72.318" height="85.42" viewBox="0 0 72.318 85.42">
+                        <g id="video-clip" transform="translate(-39.266)">
+                          <path id="Path_1" data-name="Path 1" d="M72.005,236.845a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -192.745)" fill="#e24a1a"/>
+                          <path id="Path_2" data-name="Path 2" d="M108.654,0H42.2a2.934,2.934,0,0,0-2.931,2.931v11.55a1.256,1.256,0,1,0,2.512,0V2.931a.419.419,0,0,1,.419-.419H55.664V17.3a3.772,3.772,0,0,0,3.768,3.768H91.494A3.772,3.772,0,0,0,95.262,17.3V2.512h13.392a.419.419,0,0,1,.419.419V82.49a.419.419,0,0,1-.419.419H95.262V67.987a3.772,3.772,0,0,0-3.768-3.768H59.432a3.772,3.772,0,0,0-3.768,3.768V82.908H42.2a.419.419,0,0,1-.419-.419v-62a1.256,1.256,0,1,0-2.512,0v62A2.934,2.934,0,0,0,42.2,85.42H60.841a1.256,1.256,0,0,0,0-2.512H58.176V67.987a1.258,1.258,0,0,1,1.256-1.256H91.494a1.257,1.257,0,0,1,1.256,1.256V82.908H66.932a1.256,1.256,0,1,0,0,2.512h41.721a2.934,2.934,0,0,0,2.931-2.931V2.931A2.934,2.934,0,0,0,108.654,0ZM92.75,17.3a1.257,1.257,0,0,1-1.256,1.256H59.432A1.257,1.257,0,0,1,58.176,17.3V2.512H92.75Z" fill="#e24a1a"/>
+                          <path id="Path_3" data-name="Path 3" d="M72.005,302.627a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -247.552)" fill="#e24a1a"/>
+                          <path id="Path_4" data-name="Path 4" d="M72.005,171.063a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -137.938)" fill="#e24a1a"/>
+                          <path id="Path_5" data-name="Path 5" d="M72.005,105.282a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -83.131)" fill="#e24a1a"/>
+                          <path id="Path_6" data-name="Path 6" d="M74.6,42.1h2.976a2.6,2.6,0,0,0,2.6-2.6V36.592a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6V39.5A2.6,2.6,0,0,0,74.6,42.1Zm-.084-5.5a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084V39.5a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -28.324)" fill="#e24a1a"/>
+                          <path id="Path_7" data-name="Path 7" d="M394.089,42.1h2.976a2.6,2.6,0,0,0,2.6-2.6V36.592a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6V39.5A2.6,2.6,0,0,0,394.089,42.1Zm-.084-5.5a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084V39.5a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -28.324)" fill="#e24a1a"/>
+                          <path id="Path_8" data-name="Path 8" d="M391.493,236.845a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -192.745)" fill="#e24a1a"/>
+                          <path id="Path_9" data-name="Path 9" d="M391.493,171.063a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -137.938)" fill="#e24a1a"/>
+                          <path id="Path_10" data-name="Path 10" d="M391.493,302.627a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -247.552)" fill="#e24a1a"/>
+                          <path id="Path_11" data-name="Path 11" d="M391.493,105.282a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -83.131)" fill="#e24a1a"/>
+                          <path id="Path_12" data-name="Path 12" d="M72.005,434.189a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -357.165)" fill="#e24a1a"/>
+                          <path id="Path_13" data-name="Path 13" d="M72.005,368.407a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6V365.5a2.6,2.6,0,0,0-2.6-2.6H74.6a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084H74.6a.084.084,0,0,1-.084-.084Z" transform="translate(-27.277 -302.357)" fill="#e24a1a"/>
+                          <path id="Path_14" data-name="Path 14" d="M391.493,368.407a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6V365.5a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -302.357)" fill="#e24a1a"/>
+                          <path id="Path_15" data-name="Path 15" d="M391.493,434.189a2.6,2.6,0,0,0,2.6,2.6h2.976a2.6,2.6,0,0,0,2.6-2.6v-2.908a2.6,2.6,0,0,0-2.6-2.6h-2.976a2.6,2.6,0,0,0-2.6,2.6Zm2.512-2.908a.084.084,0,0,1,.084-.084h2.976a.084.084,0,0,1,.084.084v2.908a.084.084,0,0,1-.084.084h-2.976a.084.084,0,0,1-.084-.084Z" transform="translate(-293.463 -357.165)" fill="#e24a1a"/>
+                          <path id="Path_16" data-name="Path 16" d="M173.383,186.427H168.63a1.256,1.256,0,0,0,0,2.512h4.753a3.772,3.772,0,0,0,3.768-3.768V159.318a3.772,3.772,0,0,0-3.768-3.768H141.321a3.772,3.772,0,0,0-3.768,3.768v25.853a3.772,3.772,0,0,0,3.768,3.768h21.411a1.256,1.256,0,0,0,0-2.512H141.321a1.257,1.257,0,0,1-1.256-1.256V159.318a1.257,1.257,0,0,1,1.256-1.256h32.062a1.257,1.257,0,0,1,1.256,1.256v25.853A1.257,1.257,0,0,1,173.383,186.427Z" transform="translate(-81.889 -129.599)" fill="#e24a1a"/>
+                          <path id="Path_17" data-name="Path 17" d="M218.472,200.583a2.931,2.931,0,0,0-4.4,2.538V215.2a2.931,2.931,0,0,0,4.4,2.538l10.464-6.042a2.931,2.931,0,0,0,0-5.076Zm9.208,8.942-10.464,6.042a.419.419,0,0,1-.628-.363V203.121a.4.4,0,0,1,.209-.363.425.425,0,0,1,.211-.058.412.412,0,0,1,.208.058L227.68,208.8a.419.419,0,0,1,0,.725Z" transform="translate(-145.645 -166.787)" fill="#e24a1a"/>
+                        </g>
+                    </svg>                      
+                </div>
+                <div class="logo_txt">
+                    D<span style="color: #E24A1A">N</span>Dev<span style="color: #E24A1A">M</span>edia
+                </div>
+            </div>
+
+            <div class="choose_options">
+                <div class="choose_dir">
+                    <!-- <select style="width: auto" title="The Complete Python Course  Learn Python by Doing" class="form-control btn-success" id="exampleFormControlSelect1" name="" id="">
+                        <option class='short' title="The Complete Python Course  Learn Python by Doing" data-limit='37' value="The Complete Python Course  Learn Python by Doing">The Complete Python Course Learn Python by Doing</option>
+                    </select> -->
+                    <select class="choose_dir_dropdown" style="display: none;" placeholder="Please choose">
+                        <option class='short' data-limit='26'>The Complete Python Course  Learn Python by Doing</option>
+                        <option>List entry #2</option>
+                        <option>List entry #3</option>
+                        <option>List entry #4</option>
+                    </select>
+                    
+                </div>
+                <div style="margin-top: 5px;" class="choose_subdir">
+                    <select class="choose_subdir_dropdown" style="display: none;" placeholder="Please choose">
+                        <option class='short' data-limit='16'>The Complete Python Course  Learn Python by Doing</option>
+                        <option>List entry #2</option>
+                        <option>List entry #3</option>
+                        <option>List entry #4</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="video-holder">
+            <div class="video-timeline">
+
+                <div class="add_bookmark_option">
+                    <div class="myLabel">
+                        <label for="">Enter BookMark</label>
+                    </div>
+                    <div class="input">
+                        <input type="text" placeholder="Type your bookmark...">
+                    </div>
+                    <div class="notice">
+                        <p><span>Note: </span>Hit Enter to submit your bookmark</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video">
+                
+            </div>
+        </div>
+
+        <div class="video-list">
+            <ul class="list">
+                <li data-position="1" data-baseposition="1" class="video-link">
+                    <div class="checkbox">  <!-- .completed -->
+                        <svg id="check-mark" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+                            <g id="Group_2" data-name="Group 2">
+                              <path id="Path_18" data-name="Path 18" d="M256,0C114.844,0,0,114.844,0,256S114.844,512,256,512,512,397.156,512,256,397.156,0,256,0ZM402.207,182.625,217.75,367.083a21.325,21.325,0,0,1-30.166,0L88.46,267.958a10.664,10.664,0,0,1,0-15.085l15.081-15.082a10.669,10.669,0,0,1,15.086,0l84.04,84.042L372.04,152.458a10.669,10.669,0,0,1,15.086,0l15.081,15.082A10.664,10.664,0,0,1,402.207,182.625Z" fill="#e24a1a"/>
+                            </g>
+                        </svg>                          
+                    </div>
+                    <div class="name">1. Importing our own modules.</div>
+                    <div class="completion-range"></div>
+                </li>
+            </ul>
+
+            <div class="placeholder_list">
+                <!-- <div class="placeholder_item"></div> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="video_details">
+        <div class="header">
+            <div class="video-title">
+                1. Importing our own modules.
+            </div>
+            <div class="filter">
+                <select name="" id="">
+                    <option value="This Video">This Video</option>
+                    <option value="This Root">This Root</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="bookmarks">
+            <div class="header">
+                BookMarks
+            </div>
+
+            <div id="bookmark_list">
+                <div class="bookmark">
+                    <div class="description">
+                        Again and Again
+                    </div>
+                    <div class="time_stamp">
+                        5:20
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div id="currentPath">currentPath</div> -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+    <script>
+        function shortString(selector) {
+            const elements = document.querySelectorAll(selector);
+            const tail = '...';
+            if (elements && elements.length) {
+                for (const element of elements) {
+                let text = element.innerText;
+                if (element.hasAttribute('data-limit')) {
+                    if (text.length > element.dataset.limit) {
+                    element.innerText = `${text.substring(0, element.dataset.limit - tail.length).trim()}${tail}`;
+                    }
+                } else {
+                    throw Error('Cannot find attribute \'data-limit\'');
+                }
+                }
+            }
+        }
+
+        shortString('.short');
+    </script>
+    <script src="/assets/js/main.bundle.js"></script>
+</body>
+</html>
