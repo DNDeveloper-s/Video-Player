@@ -1,6 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const utils = require('./middleware/utils');
+const ffprobe = require('ffprobe')
+const ffprobeStatic = require('ffprobe-static');
 
 // Importing Base64 encoding
 const Base64 = require('./public/assets/js/utils/Base64');
@@ -19,7 +22,7 @@ const args = process.argv;
 // PORT to be running on...
 const PORT=8080; 
 
-// const currentPath = args[2].slice(1, -1);
+console.log(args);
 
 // console.log(currentPath);
 
@@ -28,38 +31,49 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/load', async (req, res, next) => {
 
-    const decodedVideo = req.query.decodedVideo;
+    try {
+        let decodedVideo = req.query.decodedVideo;
+        let currentPath = req.query.currentPath;
 
-    const video =Base64.decode(decodedVideo);
+        currentPath = currentPath.replace(/"([^"]+(?="))"/g, '$1')
+        decodedVideo = decodedVideo.replace(/"([^"]+(?="))"/g, '$1')
 
-    const localPath = path.join(currentPath, video);
-    const stat = fs.statSync(localPath);
-    const fileSize = stat.size;
-    console.log(fileSize);
-    const range = req.headers.range;
-    if (range) {
-        const parts = range.replace(/bytes=/, "").split("-")
-        const start = parseInt(parts[0], 10)
-        const end = parts[1] 
-        ? parseInt(parts[1], 10)
-        : fileSize-1
-        const chunksize = (end-start)+1
-        const file = fs.createReadStream(localPath, {start, end})
-        const head = {
-        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunksize,
-        'Content-Type': 'video/mp4',
+        console.log(currentPath)
+
+        const video = Base64.decode(decodedVideo);
+
+
+        const localPath = path.join(currentPath, video);
+        const stat = fs.statSync(localPath);
+        const fileSize = stat.size;
+        console.log(fileSize);
+        const range = req.headers.range;
+        if (range) {
+            const parts = range.replace(/bytes=/, "").split("-")
+            const start = parseInt(parts[0], 10)
+            const end = parts[1] 
+            ? parseInt(parts[1], 10)
+            : fileSize-1
+            const chunksize = (end-start)+1
+            const file = fs.createReadStream(localPath, {start, end})
+            const head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': 'video/mp4',
+            }
+            res.writeHead(206, head);
+            file.pipe(res);
+        } else {
+            const head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'video/mp4',
+            }
+            res.writeHead(200, head)
+            fs.createReadStream(localPath).pipe(res)
         }
-        res.writeHead(206, head);
-        file.pipe(res);
-    } else {
-        const head = {
-        'Content-Length': fileSize,
-        'Content-Type': 'video/mp4',
-        }
-        res.writeHead(200, head)
-        fs.createReadStream(localPath).pipe(res)
+    } catch(e) {
+        console.log(e);
     }
 
 })
@@ -67,21 +81,61 @@ app.get('/load', async (req, res, next) => {
 
 
 app.get('/getDir', async(req, res, next) => {
-
+    const currentPath = args[2].slice(1, -1);
     const fileStructure = {
-        root: 'D:\\2019\\Html_Css_Java_more\\Tutorials\\Udemy Courses\\The Complete Python Course  Learn Python by Doing',
+        root: currentPath,
         videos: [],
         subDir: [
     
         ]
     };
 
-    await recursive(fileStructure, 'D:\\2019\\Html_Css_Java_more\\Tutorials\\Udemy Courses\\The Complete Python Course  Learn Python by Doing');
+    await recursive(fileStructure, currentPath);
 
-    return res.json({
-        files: fileStructure
-    })
+    // return res.json({
+    //     files: fileStructure
+    // })
+
+    if(!fileStructure.subDir.length > 0) {
+        fileStructure.videos = utils.sortVideoList(fileStructure.videos);
+
+        fileStructure.videos = fileStructure.videos.map((cur, ind) => {
+            return {
+                ...cur,
+                position: ind+1
+            }
+        })
+    } else {
+        fileStructure.subDir = fileStructure.subDir.map(subDir => {
+            
+            subDir.videos = utils.sortVideoList(subDir.videos);
+
+            subDir.videos = subDir.videos.map((cur, ind) => {
+                return {
+                    ...cur,
+                    position: ind+1
+                }
+            })
+
+            return subDir;
+        })
+    }
+
+    return res.render('message', {
+        data: JSON.stringify(fileStructure)
+    });
 })
+
+
+function getDuration(path1, videoName, cb) {
+    ffprobe(path.join(path1, videoName), { path: ffprobeStatic.path }, function (err, info) {
+        if(err) {
+            return console.log(err);
+        }
+        console.log(path.join(path1, videoName));
+        cb(info.streams[0].duration);
+    });
+}
 
 async function recursive(fileStructure, path1) {
 
@@ -96,6 +150,7 @@ async function recursive(fileStructure, path1) {
             // console.log('----------------------New-Root----------------------');
             fileStructure.subDir.push({
                 root: path.join(path1, dirant.name),
+                lastPlayed: false,
                 videos: [],
                 subDir: {}
             })
@@ -103,10 +158,27 @@ async function recursive(fileStructure, path1) {
             await recursive(fileStructure, path.join(path1, dirant.name));
         } else {
             if(dirant.name.slice(-4) == '.mp4') {
-                fileStructure.subDir[fileStructure.subDir.length - 1].videos.push({
-                    name: dirant.name,
-                    path: path1
-                })
+                if(fileStructure.subDir.length > 0) {
+                    // getDuration(path1, dirant.name, function(duration) {
+                        fileStructure.subDir[fileStructure.subDir.length - 1].videos.push({
+                            name: dirant.name,
+                            path: path1,
+                            bookmarks: [],
+                            // duration: duration,
+                            position: fileStructure.subDir[fileStructure.subDir.length - 1].videos.length+1
+                        })
+                    // });
+                } else {
+                    // getDuration(path1, dirant.name, function(duration) {
+                        fileStructure.videos.push({
+                            name: dirant.name,
+                            path: path1,
+                            bookmarks: [],
+                            // duration: duration,
+                            position: fileStructure.videos.length+1
+                        })
+                    // });
+                };
             }
             // console.log(dirant.name, dirant.isDirectory());
         }

@@ -41,7 +41,10 @@ class dragNDrop {
         // Looping through items
         for(let i = 0; i < this.itemCount; i++) {
             const position = i+1;
+            
+            // console.log(position);
             const item = this.el.querySelector(`.dragndrop_item[data-baseposition="${position}"]`);
+            // console.log(item);
             
             const calcTop = (position - 1) * 50;
             item.style.transform = `translateY(${calcTop}px)`;
@@ -105,10 +108,11 @@ class dragNDrop {
         this.props.startedCoords = {x: e.offsetX, y: e.offsetY};
 
         this.props.downEl = el;
-        this.props.downEl.style.zIndex = 200;
+        // this.props.downEl.style.zIndex = 200;
     }
 
     mouseIsUp(e) {
+        e.preventDefault();
         this.props.mouseIsDown = false;
         this.move(this.props.downEl, this.props.start, true /** dontSend: true, Don't send update cause no change already sent for this */)
     }

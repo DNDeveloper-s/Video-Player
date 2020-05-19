@@ -1,5 +1,3 @@
-
-
 function sortVideoList(videoArr) {
     function fnStr(str1) {
         const arr = [];
@@ -17,22 +15,6 @@ function sortVideoList(videoArr) {
     return videoArr.sort((a,b)=>fnStr(a.name)-fnStr(b.name));
 }
 
-function timeStampConv(timeStamp) {
-    let minutes = parseInt(timeStamp / 60);
-    let seconds = parseInt(timeStamp % 60);
-
-    if(minutes.toString().length === 1) {
-        minutes = `0${minutes.toString()}`
-    }
-
-    if(seconds.toString().length === 1) {
-        seconds = `0${seconds.toString()}`
-    }
-
-    return `${minutes}:${seconds}`;
-}
-
 module.exports = {
-    sortVideoList,
-    timeStampConv
+    sortVideoList
 }

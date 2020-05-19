@@ -16,16 +16,17 @@ function initDropDown(selector, cb) {
 
         list.insertAfter($(this));
 
-        if($(this).find('option:selected').length) {
-            label.text($(this).find('option:selected').text());
-            list.find('li:contains(' + $(this).find('option:selected').text() + ')').addClass('active');
-            $(this).parent().addClass('filled');
-        }
+        // if($(this).find('option:selected').length) {
+        //     label.text($(this).find('option:selected').text());
+        //     list.find('li:contains(' + $(this).find('option:selected').text() + ')').addClass('active');
+        //     $(this).parent().addClass('filled');
+        // }
 
         });
 
         console.log(`.${selector.slice(1)}Drop ul li a`);
-        $(document).on('click touch', `.${selector.slice(1)}Drop ul li a`, function(e) {
+        $(`${selector}Drop ul li a`).on('click touch', function(e) {
+            // $(this).attr('data-clickEvent', true);
             e.preventDefault();
             var dropdown = $(this).parent().parent().parent();
             var active = $(this).parent().hasClass('active');
@@ -61,13 +62,23 @@ function initDropDown(selector, cb) {
                 dropdown.removeClass('open');
             }
         });
+}
 
-        // light
-        $('.switch input').on('change', function(e) {
-        $('.dropdown, body').toggleClass('light', $(this).is(':checked'));
-    });
+function disposeDropDown(parentSel, selector) {
+    const el = document.querySelector(selector);
+
+    const parentEl = el.closest(parentSel);
+    
+    const cloneEl = el.cloneNode(true);
+
+    parentEl.innerHTML = '';
+
+    parentEl.appendChild(cloneEl);
+
+    
 }
 
 module.exports = {
-    initDropDown
+    initDropDown,
+    disposeDropDown
 }

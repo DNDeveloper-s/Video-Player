@@ -1,7 +1,8 @@
+const utils = require('./utils/utilities');
 
 function postRootPath(options) {
     // Fetching it first
-    let data = utils.fetchDatabase();
+    let data = fetchDatabase();
 
     if(!data) {
         data = [];
@@ -25,7 +26,9 @@ function postRootPath(options) {
 
 function postVideo(options) {
     // Fetching it first
-    let data = utils.fetchDatabase();
+    let data = fetchDatabase();
+
+    console.log(options);
 
     // console.log(options.completed);
 
@@ -55,9 +58,14 @@ function postVideo(options) {
 
 function updateVideo(options) {
     // Fetching it first
-    let data = utils.fetchDatabase();
+    let data = fetchDatabase();
 
-    const curPath = data.find(cur => cur.root === options.root);
+    let curPath = data.find(cur => cur.root === options.root);
+
+    if(options.mainRoot && !curPath) {
+        curPath = data.find(cur => cur.root === options.mainRoot);
+        curPath = curPath.subDir.find(cur => cur.root === options.root);
+    }
 
     if(curPath) {
         const curPathVideos = curPath.videos.map(cur => {
@@ -86,7 +94,7 @@ function updateVideo(options) {
 
 function getVideoDetails(options, cb) {
     // Fetching it first
-    let data = utils.fetchDatabase();
+    let data = fetchDatabase();
 
     if(!data) return;
 
@@ -105,16 +113,27 @@ function getVideoDetails(options, cb) {
 
 function updateRoot(options) {
     // Fetching it first
-    let data = utils.fetchDatabase();
+    let data = fetchDatabase();
 
-    const curPath = data.find(cur => cur.root === options.root);
+    let curPath = data.find(cur => cur.root === options.root);
+
+    if(options.mainRoot && !curPath) {
+        curPath = data.find(cur => cur.root === options.mainRoot);
+        curPath = curPath.subDir.find(cur => cur.root === options.root);
+    }
 
     curPath.lastPlayed = options;
     localStorage.setItem('our_database', JSON.stringify(data));
 }
 
 function fetchDatabase() {
-    const data = localStorage.getItem('our_database');
+    let data = localStorage.getItem('our_database');
+
+    if(!data) {
+        localStorage.setItem('our_database', JSON.stringify([]));
+
+        data = localStorage.getItem('our_database');
+    }
 
     return JSON.parse(data);
 }
@@ -122,12 +141,17 @@ function fetchDatabase() {
 function fetchVideo(videoObj) {
     // Fetching it first
     let data = fetchDatabase();
-
     if(!data) return;
 
-    const curPath = data.find(cur => cur.root === videoObj.root);
+    let curPath = data.find(cur => cur.root === videoObj.root);
 
-    if(!curPath) throw new Error('Path is invalid');
+    if(videoObj.mainRoot && !curPath) {
+        curPath = data.find(cur => cur.root === videoObj.mainRoot);
+        curPath = curPath.subDir.find(cur => cur.root === videoObj.root);
+    }
+
+    // console.log(curPath);
+
 
     const curVideo = curPath.videos.find(cur => cur.name === videoObj.name);
 

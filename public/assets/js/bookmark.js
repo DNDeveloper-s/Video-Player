@@ -1,4 +1,6 @@
 const utils = require('./utils/utilities');
+const db = require('./db');
+const setupVideos = require('./setupVideos');
 
 function addBookMark(options) {
     /**
@@ -14,11 +16,12 @@ function addBookMark(options) {
 
     console.log(options);
     
-    const {updateVideo} = require('./main');
+    // const {updateVideo} = require('./main');
 
-    updateVideo({
+    db.updateVideo({
         name: options.name,
         root: options.root,
+        mainRoot: options.mainRoot || null,
         bookmarks: {
             timeStamp: options.timeStamp,
             description: options.description
@@ -28,6 +31,7 @@ function addBookMark(options) {
     showBookMark({
         name: options.name,
         root: options.root,
+        mainRoot: options.mainRoot || null,
         timeStamp: options.timeStamp,
         description: options.description
     });
@@ -37,13 +41,19 @@ function addBookMark(options) {
 function showBookMark(options) {
     const bookMarkListContainer = document.getElementById('bookmark_list');
 
+    let mainRoot = null;
+
+    if(options.mainRoot) {
+        mainRoot = `data-mainRoot="${options.mainRoot}"`;
+    }
+    
     const htmlToAdd = `
-        <div class="bookmark" data-video-title="${options.name}" data-timestamp="${options.timeStamp}">
+        <div ${mainRoot} data-root="${options.root}" class="bookmark" data-video-title="${options.name}" data-timestamp="${options.timeStamp}">
             <div class="description">
                 ${options.description}
             </div>
             <div class="time_stamp">
-                ${timeStampConv(options.timeStamp)}
+                ${utils.timeStampConv(options.timeStamp)}
             </div>
         </div>
     `;
@@ -60,19 +70,16 @@ function initBookMarksEvents() {
         if(!bookmark.dataset.clickEvent || !bookmark.dataset.clickEvent === 'true') {
             bookmark.dataset.clickEvent = true;
             bookmark.addEventListener('click', function() {
-                const {playVideo} = require('./main');
-                playVideo({
+                // const {playVideo} = require('./main');
+                setupVideos.playVideo({
                     name: bookmark.dataset.videoTitle,
                     root: window.currentPath,
+                    mainRoot: bookmark.dataset.mainRoot || null,
                     currentTime: bookmark.dataset.timestamp
                 });
             })
         }
     })
-}
-
-function timeStampConv(timeStamp) {
-    return `${parseInt(timeStamp / 60)}:${parseInt(timeStamp % 60)}`;
 }
 
 function initBookMarkInputHandler(videoObj) {
@@ -91,7 +98,7 @@ function initBookMarkInputHandler(videoObj) {
 }
 
 function showThisVideoBookMarks(videoObj) {
-    const curVideo = utils.fetchVideo(videoObj);
+    const curVideo = db.fetchVideo(videoObj);
     const bookMarkListContainer = document.getElementById('bookmark_list');
     bookMarkListContainer.innerHTML = '';
     curVideo.bookmarks.forEach(bookmark => {
