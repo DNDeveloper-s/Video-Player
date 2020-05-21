@@ -67,6 +67,7 @@ function updateVideo(options) {
         curPath = curPath.subDir.find(cur => cur.root === options.root);
     }
 
+
     if(curPath) {
         const curPathVideos = curPath.videos.map(cur => {
             if(cur.name === options.name) {
@@ -74,10 +75,16 @@ function updateVideo(options) {
                 if(options.bookmarks) {
                     bookMarks.push(options.bookmarks);
                 }
+                let completed = false;
+                if(options.completed === undefined) {
+                    completed = cur.completed;
+                } else {
+                    completed = options.completed;
+                }
                 return {
                     position: options.position || cur.position,
                     name: options.name || cur.name,
-                    completed: options.completed || cur.completed || false,
+                    completed: completed,
                     completion: options.completion || cur.completion || null,
                     duration: options.duration || cur.duration || null,
                     bookmarks: bookMarks || []
@@ -149,9 +156,6 @@ function fetchVideo(videoObj) {
         curPath = data.find(cur => cur.root === videoObj.mainRoot);
         curPath = curPath.subDir.find(cur => cur.root === videoObj.root);
     }
-
-    // console.log(curPath);
-
 
     const curVideo = curPath.videos.find(cur => cur.name === videoObj.name);
 

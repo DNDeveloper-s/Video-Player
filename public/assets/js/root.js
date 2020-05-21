@@ -113,11 +113,11 @@ function loadRoot() {
             const curSubRoot = curRoot.subDir.find(cur => cur.root === root);
     
             if(curSubRoot.videos && curSubRoot.videos.length > 0) {
-                const videosList = utils.sortVideoList(curSubRoot.videos);
+                const videosList = utils.sortVideoList(curSubRoot.videos, true);
                 videoListContainer.innerHTML = '';
                 videosList.forEach((video, ind) => {
                     const htmlToAdd = `
-                        <li data-mainRoot="${props.el.dataset.root}" data-position="${video.position}" title="${video.name}" data-baseposition="${video.position}" class="video-link dragndrop_item">
+                        <li data-context-menu-options="Show all Bookmarks-Disable-Delete-Reset-Rename" data-root="${root}" data-mainRoot="${props.el.dataset.root}" data-position="${video.position}" title="${video.name}" data-baseposition="${video.position}" class="video-link dragndrop_item">
                             <div class="checkbox">
                                 <svg id="check-mark" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
                                     <g id="Group_2" data-name="Group 2">

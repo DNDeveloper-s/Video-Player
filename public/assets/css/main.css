@@ -648,6 +648,15 @@ select.dropdown {
   pointer-events: none;
 }
 
+.video-list .video-link > .name[contenteditable="true"]:focus {
+  outline: none;
+  border: 1px solid #ffffff2e;
+  padding: 5px;
+  background: #090f13;
+  color: #516571;
+  font-weight: 900;
+}
+
 .video-list .video-link > .duration {
   color: #a7a7a7;
   background: #000000e0;
@@ -655,6 +664,22 @@ select.dropdown {
   padding: 3px;
   font-size: 14px;
   margin-left: 2px;
+  opacity: 1;
+  -webkit-transform: translateX(0px);
+          transform: translateX(0px);
+  -webkit-transition: 0.2s cubic-bezier(0, 1.18, 0.5, 1.16);
+  transition: 0.2s cubic-bezier(0, 1.18, 0.5, 1.16);
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.video-list .video-link > .duration:empty {
+  opacity: 0;
+  -webkit-transform: translateX(10px);
+          transform: translateX(10px);
 }
 
 .video-list .video-link:last-child {
@@ -740,7 +765,7 @@ select.dropdown {
   color: #e24a1a;
 }
 
-.video_details > .header > .filter > select {
+.video_details > .header > .bookmarks-filter > select {
   padding: 2px 10px;
   font-size: 13px;
   outline: none;
@@ -762,11 +787,28 @@ select.dropdown {
   letter-spacing: 1px;
 }
 
-.video_details > .bookmarks > #bookmark_list {
+.video_details > .bookmarks #bookmark_list {
   width: 100%;
 }
 
-.video_details > .bookmarks > #bookmark_list > .bookmark {
+.video_details > .bookmarks #bookmark_list .category-separator {
+  background: #212931;
+  margin: 0 60px;
+  font-family: 'Roboto';
+  margin-top: 10px;
+}
+
+.video_details > .bookmarks #bookmark_list .category-separator:first-child {
+  margin-top: 0;
+}
+
+.video_details > .bookmarks #bookmark_list .category-separator > .video-name {
+  padding: 10px 20px;
+  background: #090f13;
+  color: #e24a20;
+}
+
+.video_details > .bookmarks #bookmark_list .bookmark {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -776,22 +818,90 @@ select.dropdown {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: #c7e1f1;
-  padding: 20px;
-  margin: 0 60px;
+  color: #fffeff;
+  padding: 15px 30px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.video_details > .bookmarks > #bookmark_list > .bookmark:hover {
+.video_details > .bookmarks #bookmark_list .bookmark:hover {
   background: #0000002e;
   cursor: pointer;
 }
 
-.video_details > .bookmarks > #bookmark_list > .bookmark > .time_stamp {
-  width: 40px;
+.video_details > .bookmarks #bookmark_list .bookmark > .time_stamp {
   letter-spacing: 1px;
   font-family: 'Roboto', sans-serif;
   text-align: left;
+  text-align: left;
+  background: #162026;
+  padding: 2px 5px;
+  color: white;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.video_details > .bookmarks #bookmark_list > .bookmark {
+  margin: 0 60px;
+  color: #86a2b7;
+}
+
+.contextMenu {
+  position: absolute;
+  width: 200px;
+  padding: 4px 0;
+  background-color: white;
+  -webkit-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  opacity: 1;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+  pointer-events: auto;
+  -webkit-transition: 0.3s cubic-bezier(0, 1.18, 0.5, 1.16);
+  transition: 0.3s cubic-bezier(0, 1.18, 0.5, 1.16);
+  -webkit-animation: show 0.3s cubic-bezier(0, 1.18, 0.5, 1.16);
+          animation: show 0.3s cubic-bezier(0, 1.18, 0.5, 1.16);
+}
+
+.contextMenu.hide {
+  opacity: 0;
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.contextMenu > .menu_holder > .option {
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: 'Ubuntu';
+  border-bottom: 1px solid #a7a7a7a8;
+  cursor: pointer;
+}
+
+.contextMenu > .menu_holder > .option:hover {
+  background: #80808085;
+}
+
+.contextMenu > .menu_holder > .option:last-child {
+  border-bottom: none;
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+    pointer-events: none;
+  }
+  40% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    pointer-events: auto;
+  }
 }
 
 .message {

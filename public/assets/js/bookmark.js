@@ -1,6 +1,5 @@
 const utils = require('./utils/utilities');
 const db = require('./db');
-const setupVideos = require('./setupVideos');
 
 function addBookMark(options) {
     /**
@@ -66,6 +65,8 @@ function initBookMarksEvents() {
     const bookMarkListContainer = document.getElementById('bookmark_list');
     const bookmarks = bookMarkListContainer.querySelectorAll('.bookmark');
 
+    const setupVideos = require('./setupVideos');
+
     bookmarks.forEach(bookmark => {
         if(!bookmark.dataset.clickEvent || !bookmark.dataset.clickEvent === 'true') {
             bookmark.dataset.clickEvent = true;
@@ -97,6 +98,96 @@ function initBookMarkInputHandler(videoObj) {
     });
 }
 
+function initBookMarkFilterHandler(videoObj) {
+    const filterBookMark = document.querySelector('.bookmarks-filter > select');
+
+    filterBookMark.addEventListener('change', function() {
+        const opt = getSelectedOption(filterBookMark);
+        if(opt.value === 'This Root') {
+            console.log(opt.value);
+            showAllBookMarks(videoObj);
+        } else if(opt.value === 'This Video') {
+            const curVideoName = document.querySelector('video').dataset.videoname;
+            showThisVideoBookMark({
+                ...videoObj,
+                name: curVideoName
+            })
+        }
+    })
+}
+
+function showThisVideoBookMark(videoObj) {
+    const curVideo = db.fetchVideo(videoObj);
+    const bookMarkListContainer = document.getElementById('bookmark_list');
+
+    let mainRoot = null;
+    if(videoObj.mainRoot) {
+        mainRoot = `data-mainRoot="${videoObj.mainRoot}"`;
+    }
+    bookMarkListContainer.innerHTML = '';
+    curVideo.bookmarks.forEach(bookmark => {
+        const htmlToAdd = getBookMarkHTMLByBookMarkObject(bookmark, curVideo, mainRoot);
+
+        bookMarkListContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+        initBookMarksEvents();
+    });
+}
+
+function showAllBookMarks(videoObj) {
+    const data = db.fetchDatabase();
+
+    if(!data) throw new Error('No Database Found!');
+
+    let curPath = data.find(cur => cur.root === videoObj.root);
+    
+    if(videoObj.mainRoot && !curPath) {
+        curPath = data.find(cur => cur.root === videoObj.mainRoot);
+        curPath = curPath.subDir.find(cur => cur.root === videoObj.root);
+    }
+
+    const bookMarksList = document.getElementById('bookmark_list');
+    bookMarksList.innerHTML = '';
+    curPath.videos.forEach(video => {
+        if(video.bookmarks.length > 0) {
+            const structureHtml = `
+                <div class="category-separator" data-videoname="${video.name}">
+                    <div class="video-name">${video.name}</div>
+                </div>
+            `;
+            bookMarksList.insertAdjacentHTML('beforeend', structureHtml);
+
+            video.bookmarks.forEach((bookmark) => {
+
+                let mainRoot = null;
+            
+                if(videoObj.mainRoot) {
+                    mainRoot = `data-mainRoot="${videoObj.mainRoot}"`;
+                }
+                
+                const htmlToAdd = getBookMarkHTMLByBookMarkObject(bookmark, video, mainRoot);
+
+                const categorySeparatorEl = bookMarksList.querySelector(`.category-separator[data-videoname="${video.name}"]`);
+                categorySeparatorEl.insertAdjacentHTML('beforeend', htmlToAdd);
+
+            })
+        }
+    })
+
+}
+
+function getBookMarkHTMLByBookMarkObject(bookmark, video, mainRoot) {
+    return `
+        <div ${mainRoot} data-root="${video.root}" class="bookmark" data-video-title="${video.name}" data-timestamp="${bookmark.timeStamp}">
+            <div class="description">
+                ${bookmark.description}
+            </div>
+            <div class="time_stamp">
+                ${utils.timeStampConv(bookmark.timeStamp)}
+            </div>
+        </div>
+    `;
+}
+
 function showThisVideoBookMarks(videoObj) {
     const curVideo = db.fetchVideo(videoObj);
     const bookMarkListContainer = document.getElementById('bookmark_list');
@@ -110,7 +201,19 @@ function showThisVideoBookMarks(videoObj) {
     })
 }
 
+function getSelectedOption(sel) {
+    var opt;
+    for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+        opt = sel.options[i];
+        if ( opt.selected === true ) {
+            break;
+        }
+    }
+    return opt;
+}
+
 module.exports = {
     initBookMarkInputHandler,
-    showThisVideoBookMarks
+    showThisVideoBookMarks,
+    initBookMarkFilterHandler
 }

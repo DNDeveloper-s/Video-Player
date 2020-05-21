@@ -35,18 +35,12 @@ app.get('/load', async (req, res, next) => {
         let decodedVideo = req.query.decodedVideo;
         let currentPath = req.query.currentPath;
 
-        currentPath = currentPath.replace(/"([^"]+(?="))"/g, '$1')
-        decodedVideo = decodedVideo.replace(/"([^"]+(?="))"/g, '$1')
-
-        console.log(currentPath)
-
         const video = Base64.decode(decodedVideo);
+        const curPath = Base64.decode(currentPath);
 
-
-        const localPath = path.join(currentPath, video);
+        const localPath = path.join(curPath, video);
         const stat = fs.statSync(localPath);
         const fileSize = stat.size;
-        console.log(fileSize);
         const range = req.headers.range;
         if (range) {
             const parts = range.replace(/bytes=/, "").split("-")
@@ -126,6 +120,26 @@ app.get('/getDir', async(req, res, next) => {
     });
 })
 
+app.get('/getDuration', async (req, res, next) => {
+
+    let decodedVideo = req.query.decodedVideo;
+    let currentPath = req.query.currentPath;
+
+    const video = Base64.decode(decodedVideo);
+    const curPath = Base64.decode(currentPath);
+
+    
+
+    return getDuration(curPath, video, function(duration) {
+        console.log(duration);
+        return res.json({
+            acknowledgement: {
+                type: 'success',
+                duration: duration
+            }
+        })
+    });
+})
 
 function getDuration(path1, videoName, cb) {
     ffprobe(path.join(path1, videoName), { path: ffprobeStatic.path }, function (err, info) {

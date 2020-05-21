@@ -44,19 +44,19 @@ function outOfBookMarkModal(e) {
     }
 }
 
-const our_database = [
-    {
-        path: '/',
-        lastPlayed: 'videoObj',
-        videos: [
-            {   // videoObj
-                position: 1,
-                name: 'My Video',
-                completion: 600,
-                duration: 3500
-            }
-        ]
-    }
-]
+// const our_database = [
+//     {
+//         path: '/',
+//         lastPlayed: 'videoObj',
+//         videos: [
+//             {   // videoObj
+//                 position: 1,
+//                 name: 'My Video',
+//                 completion: 600,
+//                 duration: 3500
+//             }
+//         ]
+//     }
+// ]
 
 // document.getElementById('save').onclick = updatePosition;

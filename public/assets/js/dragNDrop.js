@@ -30,9 +30,9 @@ class dragNDrop {
 
         this.setupElements();
 
-        this.initEvents();
+        // this.initEvents();
 
-        this.initFrames();
+        // this.initFrames();
     }
 
     setupElements() {

@@ -1,6 +1,9 @@
 const Base64 = require('./utils/Base64');
 const dragNDrop = require('./dragNDrop');
 const db = require('./db');
+const utils = require('./utils/utilities');
+const ContextMenu = require('./ContextMenu');
+const bookmark = require('./bookmark');
 
 /**
  * 
@@ -26,31 +29,56 @@ function init(mainProps) {
     const videos = document.querySelectorAll('.video-link');
     const videoContainer = document.querySelector('.video');
     
-    function getDuration(options) {
-        const videoEl = document.createElement('video');
+    async function getDuration(options) {
+        const curVideo = db.fetchVideo({
+            root: options.root,
+            mainRoot: mainProps.mainRoot || null,
+            name: options.name
+        }) 
         
-        const decodedVideo = Base64.encode(options.name);
+        if(!curVideo.duration) {
+            const decodedVideo = Base64.encode(options.name);
+            const decodedPath = Base64.encode(currentPath);
 
-        videoEl.setAttribute('src', `${window.location.origin}/load?decodedVideo=${decodedVideo}&currentPath="${currentPath}"`);
-        videoEl.setAttribute('type', 'video/mp4');
+            const res = await fetch(`${window.location.origin}/getDuration?decodedVideo=${decodedVideo}&currentPath="${decodedPath}"`)
+            const data = await res.json();
 
-        videoEl.onloadedmetadata = function(e) {
-            const duration = videoEl.duration;
+            if(data.acknowledgement.type === 'success') {
+                // Showing Duration Element on video link
+                const videoLinkEl = document.querySelector(`.video-link[title="${options.name}"]`);
+                videoLinkEl.querySelector('.duration').innerHTML = utils.timeStampConv(data.acknowledgement.duration);
 
-            db.updateVideo({
-                root: options.root,
-                mainRoot: mainProps.mainRoot || null,
-                name: options.name,
-                duration: duration
-            })
-
+                db.updateVideo({
+                    root: options.root,
+                    mainRoot: mainProps.mainRoot || null,
+                    name: options.name,
+                    duration: data.acknowledgement.duration
+                })
+            }
         }
+
+        // videoEl.setAttribute('src', `${window.location.origin}/load?decodedVideo=${decodedVideo}&currentPath="${decodedPath}"`);
+        // videoEl.setAttribute('type', 'video/mp4');
+
+        // videoEl.onloadedmetadata = function(e) {
+        //     const duration = videoEl.duration;
+
+        
+
+        //     db.updateVideo({
+        //         root: options.root,
+        //         mainRoot: mainProps.mainRoot || null,
+        //         name: options.name,
+        //         duration: duration
+        //     })
+
+        // }
     }
 
     let vidLen = videos.length;
-    if(videos.length > 50) {
-        vidLen = 50; 
-    }
+    // if(videos.length > 50) {
+    //     vidLen = 50; 
+    // }
     
     
     const videosArr = [];
@@ -81,14 +109,54 @@ function init(mainProps) {
 
         getDuration(videoObj);
 
-        video.addEventListener('click', function(e) {
-            playVideo({
+
+        const menu = new ContextMenu(`.video-link[data-position="${i}"]`);
+        menu.init();
+
+        video.addEventListener('mouseup', function(e) {
+            if(e.button !== 0) return;
+            const curVideoEl = document.querySelector(`video[data-videoname="${this.querySelector('.name').innerText}"]`);
+
+            if(!curVideoEl) {
+                playVideo({
+                    root: currentPath,
+                    mainRoot: mainProps.mainRoot || null,
+                    position: this.dataset.position,
+                    name: this.querySelector('.name').innerText
+                });
+            }
+        })
+
+        video.querySelector('.checkbox').addEventListener('mouseup', function(e) {
+            if(e.button !== 0) return;
+            const videoObj = {
                 root: currentPath,
                 mainRoot: mainProps.mainRoot || null,
-                position: this.dataset.position,
-                name: this.querySelector('.name').innerText
-            });
+                name: video.querySelector('.name').innerText
+            }
+            toggleVideoCompletion(this, videoObj);
         })
+    }
+
+    function toggleVideoCompletion(thisEl, videoObj) {
+        const curVideo = db.fetchVideo(videoObj);
+        const isVideoCompleted = curVideo.completed;
+        
+        console.log(curVideo);
+        
+        if(isVideoCompleted) {
+            db.updateVideo({
+                ...videoObj,
+                completed: false
+            })
+            thisEl.classList.remove('completed');
+        } else {
+            db.updateVideo({
+                ...videoObj,
+                completed: true
+            })
+            thisEl.classList.add('completed');
+        }
     }
 
     init();
@@ -175,6 +243,11 @@ function init(mainProps) {
             InCompletedVideo = curPath.videos.filter(cur => cur.completed === false)[0];
         }
 
+        bookmark.initBookMarkFilterHandler({
+            root: currentPath,
+            mainRoot: mainProps.mainRoot || null
+        });
+
         // console.log(InCompletedVideo);
 
         // Playing video
@@ -190,6 +263,8 @@ function init(mainProps) {
         const list = new dragNDrop('.list');
         list.init();
     }
+
+    
 
     // function updatePosition() {
     //     for(let i = 1; i <= vidLen; i++) {
@@ -265,7 +340,8 @@ function playVideo(videoObj) {
     const videoContainer = document.querySelector('.video');
 
     const curVideoEl = document.querySelector(`.video > video[data-videoname="${videoObj.name}"]`);
-    if(curVideoEl) {
+    
+    if(curVideoEl && videoObj.currentTime) {
         curVideoEl.currentTime = videoObj.currentTime;
         return;
     }
@@ -291,8 +367,9 @@ function playVideo(videoObj) {
     videoLink.classList.add('active');
 
     const decodedVideo = Base64.encode(videoLink.querySelector('.name').innerText);
+    const decodedPath = Base64.encode(currentPath);
     
-    videoContainer.innerHTML = `<video data-videoname="${videoObj.name}" data-videoposition="${videoLink.dataset.position}" src="${window.location.origin}/load?decodedVideo=${decodedVideo}&currentPath=${currentPath}" controls autoplay muted></video>`
+    videoContainer.innerHTML = `<video data-videoname="${videoObj.name}" data-videoposition="${videoLink.dataset.position}" src="${window.location.origin}/load?decodedVideo=${decodedVideo}&currentPath=${decodedPath}" controls autoplay muted></video>`
     // videoContainer.innerHTML = `<video src="" controls muted></video>`
     
     const videoEl = document.querySelector(`video`);
